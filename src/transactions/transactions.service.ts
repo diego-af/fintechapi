@@ -34,4 +34,29 @@ export class TransactionsService {
 
     return transactionUpdated;
   }
+
+
+  async deleteTransaction(id: string, userId: string) {
+
+    const transactionsExists = await this.transactionRepository.getTranactionById(id)
+
+
+    if(!transactionsExists){
+      throw new HttpException('Transaction not found', 404);
+    }
+
+    const belongToUser = await this.transactionRepository.belongToTransactionuser(userId);
+
+
+    if(!belongToUser){
+      throw new HttpException('Transaction not to belong user', 401);
+    }
+
+
+    const transactionDeleted = await this.transactionRepository.deleteTransaction(id)
+
+
+
+    return transactionDeleted
+  }
 }

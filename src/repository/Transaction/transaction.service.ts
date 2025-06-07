@@ -55,4 +55,35 @@ export class TransactionRepository {
 
     return transactionExists;
   }
+
+
+  async deleteTransaction(id: string) {
+   const deletedTransaction = await this.prisma.transaction.delete({
+
+     where:{
+       id:id
+     }
+   })
+
+
+    return deletedTransaction
+
+
+  }
+
+
+  async belongToTransactionuser(userId: string){
+
+    const transaction = await this.prisma.transaction.findFirst({
+      where:{
+        userId:userId
+      },
+      include:{
+        user:true
+      }
+    })
+
+
+    return transaction
+  }
 }

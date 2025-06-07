@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   Inject,
   Param,
@@ -12,6 +12,7 @@ import {
 import { TransactionsService } from './transactions.service';
 import { TransactionDto } from '../DTO/Transactions/transactions.dto';
 import { AuthGuard } from '../AuthGuards/auth.guard';
+import { response } from 'express';
 
 @Controller()
 export class TransactionsController {
@@ -57,5 +58,20 @@ export class TransactionsController {
       message: 'Transaction updated successfully',
       transaction: transactionUpdated,
     };
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete("transactions/:id")
+  async deleteTransactionController(@Param("id") id: string, @Req() req: Request){
+    const userId = (req['user'] as { sub: string }).sub;
+    const transactiondDeleted = await this.transactionsService.deleteTransaction(id, userId)
+
+
+    return {
+      message:"Transaction deleted successfully",
+      transactiondDeleted
+
+    }
+
   }
 }
